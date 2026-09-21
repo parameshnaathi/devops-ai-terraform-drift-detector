@@ -8,7 +8,34 @@ The solution should be cloud-agnostic, extensible, and optimized for fast infras
 
 Let's create a plan first.
 
-![alt text](mermaid-diagram.png)
+# Terraform Drift Detection Architecture
+
+The platform compares infrastructure defined in Terraform state with the
+actual state of resources running in the cloud.
+
+## Architecture
+
+```mermaid
+flowchart TD
+
+    A[Terraform State<br/>terraform.tfstate]
+    B[Cloud Provider<br/>AWS / Azure / GCP]
+
+    A --> C[State Reader]
+    C --> D[Resource Extractor]
+    D --> E[Expected Resource Model]
+
+    B --> F[Cloud Fetcher]
+    F --> G[Resource Extractor]
+    G --> H[Actual Resource Model]
+
+    E --> I[Drift Engine<br/>Compare Expected vs Actual]
+    H --> I
+
+    I --> J[Report Generator]
+
+    J --> K[Console Output]
+    J --> L[JSON Report]
 
 
 
