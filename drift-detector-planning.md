@@ -15,27 +15,25 @@ actual state of resources running in the cloud.
 
 ## Architecture
 
-```mermaid
-flowchart TD
-
-    A[Terraform State<br/>terraform.tfstate]
-    B[Cloud Provider<br/>AWS / Azure / GCP]
-
-    A --> C[State Reader]
-    C --> D[Resource Extractor]
-    D --> E[Expected Resource Model]
-
-    B --> F[Cloud Fetcher]
-    F --> G[Resource Extractor]
-    G --> H[Actual Resource Model]
-
-    E --> I[Drift Engine<br/>Compare Expected vs Actual]
-    H --> I
-
-    I --> J[Report Generator]
-
-    J --> K[Console Output]
-    J --> L[JSON Report]
-
-
-
+Terraform State                       Cloud Provider
+(terraform.tfstate)                  (AWS / Azure / GCP)
+       |                                      |
+       v                                      v
+ State Reader                           Cloud Fetcher
+       |                                      |
+       v                                      v
+Resource Extractor                    Resource Extractor
+       |                                      |
+       v                                      v
+Expected Resource Model               Actual Resource Model
+              \                         /
+               \                       /
+                v                     v
+              Drift Engine
+        Compare Expected vs Actual
+                    |
+                    v
+             Report Generator
+               /          \
+              v            v
+      Console Output    JSON Report
